@@ -31,7 +31,13 @@
 		$sizes = $collectem->getImgSizes('poster');
 		
 		// Create pagination
-		$show_pagination = ($movies['total_pages'] > $cfg->pagination);
+		if (isset($movies['total_pages']))
+		{
+			$show_pagination = ($movies['total_pages'] > $cfg->pagination);
+		} else {
+			$show_pagination = FALSE;
+		}
+		
 		
 		// Display search results
 		include('views/search_results.php');
@@ -147,8 +153,13 @@
 		$library = $database->getLibrary($from, $cfg->per_page);
 		
 		// Create pagination
-		$total_pages = ceil($library['total_results'] / $cfg->per_page);
-		$show_pagination = ($total_pages > $cfg->pagination);
+		if (isset($library['total_results']))
+		{
+			$total_pages = ceil($library['total_results'] / $cfg->per_page);
+			$show_pagination = ($total_pages > $cfg->pagination);
+		} else {
+			$show_pagination = FALSE;
+		}
 		
 		$collectem = new Collectem();
 		$tmdb = $collectem->getTMDB();
