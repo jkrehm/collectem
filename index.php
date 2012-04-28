@@ -19,7 +19,7 @@
 		
 		$movies = $data['movie_info']; // Get just the movie info
 		$sizes = $collectem->getImgSizes('poster');
-		debug($movies,'P');
+		
 		// Display search results
 		include('views/search_results.php');
 	}
@@ -30,35 +30,36 @@
 	{
 		include('controllers/database.php');
 		
-		debug($_POST['selected'],'P');
-		
 		$collectem = new Collectem();
 		$tmdb = $collectem->getTMDB();
 		$img_url = $tmdb->getImageURL();
-
-		foreach ($_POST['selected'] as $movie)
+		
+		if (isset($_POST['selected']))
 		{
-			$m = $tmdb->movieInfo($movie);
-						
-			$insert_data = array(
-				'id'=>$m['id'],
-				'title'=>$m['title'],
-				'tagline'=>$m['tagline'],
-				'overview'=>$m['overview'],
-				'poster_path'=>$m['poster_path'],
-				'release_date'=>$m['release_date'],
-				'imdb_id'=>$m['imdb_id']
-			);
-			
-			$database = new Database();
-			$return = $database->insertMovie($insert_data);
-			
-			if ($return)
+			foreach ($_POST['selected'] as $movie)
 			{
-				$data['message'] = 'Movie(s) successfully added to collection';
-			} else {
-				$data['error'] = TRUE;
-				$data['message'] = 'Error while inserting movie: ' . $database->getError();
+				$m = $tmdb->movieInfo($movie);
+							
+				$insert_data = array(
+					'id'=>$m['id'],
+					'title'=>$m['title'],
+					'tagline'=>$m['tagline'],
+					'overview'=>$m['overview'],
+					'poster_path'=>$m['poster_path'],
+					'release_date'=>$m['release_date'],
+					'imdb_id'=>$m['imdb_id']
+				);
+				
+				$database = new Database();
+				$return = $database->insertMovie($insert_data);
+				
+				if ($return)
+				{
+					$data['message'] = 'Movie(s) successfully added to collection';
+				} else {
+					$data['error'] = TRUE;
+					$data['message'] = 'Error while inserting movie: ' . $database->getError();
+				}
 			}
 		}
 		
@@ -88,7 +89,6 @@
 
 		$movie = $tmdb->movieInfo(get_get('id'));
 		$movie['trailer'] = $tmdb->movieTrailer(get_get('id'));
-		debug($movie['trailer'],'C');
 		$img_url = $tmdb->getImageURL();
 		$sizes = $collectem->getImgSizes('poster');
 		
@@ -106,7 +106,7 @@
 		$database = new Database();
 
 		// User selected an item to remove
-		if (isset($_POST['remove']))
+		if (isset($_POST['remove']) && isset($_POST['selected']))
 		{
 			$return = $database->removeMovie($_POST['selected']);
 
@@ -120,9 +120,10 @@
 		}
 		
 		// Show the library
-		$from = (isset($_GET['p'])) ? $_GET['p']*20-20 : 0;
+		$cnt_per_pg = 21;
+		$from = (isset($_GET['p'])) ? $_GET['p']*$cnt_per_pg-$cnt_per_pg : 0;
 		
-		$library = $database->getLibrary($from, 20);
+		$library = $database->getLibrary($from, $cnt_per_pg);
 		
 		$collectem = new Collectem();
 		$tmdb = $collectem->getTMDB();
