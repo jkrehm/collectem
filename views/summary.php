@@ -6,7 +6,7 @@
 		.poster {
 			text-align: center;
 			display: block;
-			margin: 0 auto;
+			margin: 0 auto 10px auto;
 		}
 	</style>
 </head>

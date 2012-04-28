@@ -1,14 +1,20 @@
 <?php
 	class Database
 	{
-		const db_dev = 'collectem_dev';
-		const db_prd = 'collectem_prd';
-		const db_dmo = 'collectem_dmo';
 		private $_db;
 		
 		public function __construct()
 		{
-			$this->_db = new mysqli('localhost','process','vQ%B6cSzWrdCq9x',self::db_dev);
+			if (!file_exists('config.xml'))
+			{
+				// handle error
+			} else {
+				// User must have SELECT, UPDATE, INSERT, and DELETE access. VIEW access may be required in the future.
+				$config = simplexml_load_file('config.xml');
+				$cfg = $config->database;
+			}
+			
+			$this->_db = new mysqli($cfg->server, $cfg->username, $cfg->password, $cfg->database);
 			
 			if ($this->_db->connect_errno)
 			{

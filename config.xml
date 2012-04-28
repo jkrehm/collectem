@@ -1,0 +1,10 @@
+<?xml version='1.0' standalone='yes'?>
+<configuration>
+	<database>
+		<server>localhost</server>
+		<port>3306</port>
+		<username>process</username>
+		<password>vQ%B6cSzWrdCq9x</password>
+		<database>collectem_dev</database>
+	</database>
+</configuration>
