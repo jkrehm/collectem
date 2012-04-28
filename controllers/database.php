@@ -125,7 +125,7 @@
 			
 			$res = $this->_db->query('SELECT COUNT(*) FROM collection');
 			$total = $res->fetch_row();
-			$return['total_cnt'] = $total[0];
+			$return['total_results'] = $total[0];
 			$return['total_pages'] = ceil($total[0]/$count);
 			
 			return $return;

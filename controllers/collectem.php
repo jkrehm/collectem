@@ -125,24 +125,6 @@
 		}
 		
 		
-		// public function getNextPage()
-		// {
-		// 	$this->_search_page++;
-		// 	$this->_data['movie_info'] = $this->_tmdb->searchMovie($this->_search_val, $this->_search_page);
-		// 	
-		// 	return $this;
-		// }
-		// 
-		// 
-		// public function getPreviousPage()
-		// {
-		// 	$this->_search_page--;
-		// 	$this->_data['movie_info'] = $this->_tmdb->searchMovie($this->_search_val, $this->_search_page);
-		// 	
-		// 	return $this;
-		// }
-		
-		
 		public function getPageNumber()
 		{
 			return $this->_search_page;

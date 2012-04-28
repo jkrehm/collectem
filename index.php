@@ -8,17 +8,30 @@
 	include_once('controllers/collectem.php');
 	include_once('library/debug.php');
 	
+	
 	// User searched for an item
 	if (isset($_GET['search']))
 	{	
 		$collectem = new Collectem();
 		
+		// Get configuration
+		if (!file_exists('config.xml'))
+		{
+			// handle error
+		} else {
+			$config = simplexml_load_file('config.xml');
+			$cfg = $config->library;
+		}
+		
 		$page = (!get_get('page') || !is_numeric(get_get('page'))) ? 1 : get_get('page'); // Get the page
 		
 		$data = $collectem->search(get_get('type'), get_get('search'), $page)->getData();
-		
+			
 		$movies = $data['movie_info']; // Get just the movie info
 		$sizes = $collectem->getImgSizes('poster');
+		
+		// Create pagination
+		$show_pagination = ($movies['total_pages'] > $cfg->pagination);
 		
 		// Display search results
 		include('views/search_results.php');
@@ -102,7 +115,16 @@
 	elseif (isset($_GET['library']))
 	{
 		include_once('controllers/database.php');
-
+		
+		// Get configuration
+		if (!file_exists('config.xml'))
+		{
+			// handle error
+		} else {
+			$config = simplexml_load_file('config.xml');
+			$cfg = $config->library;
+		}
+		
 		$database = new Database();
 
 		// User selected an item to remove
@@ -120,10 +142,13 @@
 		}
 		
 		// Show the library
-		$cnt_per_pg = 21;
-		$from = (isset($_GET['p'])) ? $_GET['p']*$cnt_per_pg-$cnt_per_pg : 0;
+		$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->per_page - $cfg->per_page : 0;
 		
-		$library = $database->getLibrary($from, $cnt_per_pg);
+		$library = $database->getLibrary($from, $cfg->per_page);
+		
+		// Create pagination
+		$total_pages = ceil($library['total_results'] / $cfg->per_page);
+		$show_pagination = ($total_pages > $cfg->pagination);
 		
 		$collectem = new Collectem();
 		$tmdb = $collectem->getTMDB();

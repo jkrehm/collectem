@@ -75,7 +75,7 @@
 	
 	<div id="container">
 	
-		<a href="index.php">Home</a>
+		<a href="index.php" style="float:left">Home</a>
 		
 	<?php if (!isset($data['error'])): ?>
 			
@@ -85,6 +85,18 @@
 		
 		<?php else: ?>
 		
+			<div style="color:white; float:right">Movies: <?php echo $movies['total_results'] ?></div>
+			
+			<?php if ($show_pagination): ?>
+				<div style="text-align:center">
+					<?php for ($i=1; $i<=$movies['total_pages']; $i++): ?>
+						<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+					<?php endfor ?>
+				</div>
+			<?php else: ?>
+				<div style="clear:both"></div>
+			<?php endif ?>
+			
 			<ul class="results">
 			<?php foreach ($movies['results'] as $key => $movie): ?>
 				<li title="<?php echo $movie['title'] ?>">
@@ -92,33 +104,35 @@
 						<img class="poster" src="<?php echo (strlen($movie['poster_path']) > 0) ? $movies['img_url'] . $sizes[2] . $movie['poster_path'] : 'assets/img/empty_img.png' ?>" title="<?php echo $movie['title'] ?>" alt="<?php echo $movie['title'] ?>"/>
 						<p><?php echo $movie['title'] . ((strlen($movie['release_date']) > 0) ? ' (' . substr($movie['release_date'], 0, 4) . ')' : '') ?></p>
 					</div>
-							<a class="details" href="index.php?summary&id=<?php echo $movie['id'] ?>">
-								<img class="details" src="assets/img/icons/infobox_info_icon.png" title="Show details"/>
-							</a>
+					
+					<a class="details" href="index.php?summary&id=<?php echo $movie['id'] ?>">
+						<img class="details" src="assets/img/icons/infobox_info_icon.png" title="Show details"/>
+					</a>
 				</li>
 			<?php endforeach ?>
 			</ul>
-		
-			<form action="index.php" method="post" accept-charset="utf-8" style="clear:left">
-				<p style="text-align:center"><input type="submit" name="add" value="Add"></p>
-			</form>
+			
+			<div style="clear:both"></div>
 		
 			<?php if ($movies['total_pages'] > 1): ?>
 			
-				<?php if ($collectem->getPageNumber() < $movies['total_pages']): ?>
-					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() + 1 ?>" style="float:right; margin-top:-35px">
-						<button type="button">Next</button>
-					</a>
-				<?php endif ?>
-			
 				<?php if ($collectem->getPageNumber() > 1): ?>
-					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() - 1 ?>" style="float:left; margin-top:-35px">
+					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() - 1 ?>" style="float:left">
 						<button type="button">Previous</button>
 					</a>
 				<?php endif ?>
 			
-				<div style="clear:both"></div>
+				<?php if ($collectem->getPageNumber() < $movies['total_pages']): ?>
+					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() + 1 ?>" style="float:right">
+						<button type="button">Next</button>
+					</a>
+				<?php endif ?>
+
 			<?php endif ?>
+		
+			<form action="index.php" method="post" accept-charset="utf-8" style="text-align:center">
+				<input type="submit" name="add" value="Add">
+			</form>
 
 			<div class="preload">
 				<img src="assets/img/icons/green_checkmark.png" alt=""/>

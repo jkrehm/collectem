@@ -79,17 +79,27 @@
 	
 	<div id="container">
 	
-		<a href="index.php">Home</a>
+		<a href="index.php" style="float:left">Home</a>
 		
 	<?php if (!isset($data['error'])): ?>
 			
 		<?php if (!isset($library['library']) || count($library['library']) == 0): ?>
 		
-			<div style="font-size:1.5em; color:white; text-align:center">No movies found</div>
+			<div style="font-size:1.5em; color:white; text-align:center; clear:left">No movies found</div>
 		
 		<?php else: ?>
 			
-			<div style="color:white; float:right">Movies: <?php echo $library['total_cnt'] ?></div>
+			<div style="color:white; float:right">Movies: <?php echo $library['total_results'] ?></div>
+			
+			<?php if ($show_pagination): ?>
+				<div style="text-align:center">
+					<?php for ($i=1; $i<=$total_pages; $i++): ?>
+						<a href="index.php?library&p=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+					<?php endfor ?>
+				</div>
+			<?php else: ?>
+				<div style="clear:both"></div>
+			<?php endif ?>
 		
 			<ul class="library">
 			<?php foreach ($library['library'] as $key => $movie): ?>
@@ -100,35 +110,37 @@
 						</a>
 						<p><?php echo $movie['title'] . ((strlen($movie['release_date']) > 0) ? ' (' . substr($movie['release_date'], 0, 4) . ')' : '') ?></p>
 					</div>
+					
 					<a class="details" href="index.php?summary&id=<?php echo $movie['id'] ?>">
 						<img src="assets/img/icons/infobox_info_icon.png" title="Show details"/>
 					</a>
+					
 					<img class="remove" src="assets/img/icons/red_x_corner.png" title="Mark for removal"/>
 				</li>
 			<?php endforeach ?>
 			</ul>
-		
-			<form action="index.php?library<?php echo (isset($_GET['p'])) ? '&p='.$_GET['p'] : '' ?>" method="post" accept-charset="utf-8" style="clear:left">
-				<p style="text-align:center"><input type="submit" name="remove" value="Remove"></p>
-			</form>
+			
+			<div style="clear:both"></div>
 		
 			<?php if ($library['total_pages'] > 1): ?>
 			
-				<?php if (!isset($_GET['p']) || $_GET['p'] < $library['total_pages']): ?>
-					<a href="index.php?library&p=<?php echo (isset($_GET['p'])) ? $_GET['p']+1 : 2 ?>" style="float:right; margin-top:-35px">
-						<button type="button">Next</button>
-					</a>
-				<?php endif ?>
-			
 				<?php if (get_get('p') > 1): ?>
-					<a href="index.php?library&p=<?php echo $_GET['p']-1 ?>" style="float:left; margin-top:-35px">
+					<a href="index.php?library&p=<?php echo $_GET['p']-1 ?>" style="float:left">
 						<button type="button">Previous</button>
 					</a>
 				<?php endif ?>
 			
-				<div style="clear:both"></div>
-			
+				<?php if (!isset($_GET['p']) || $_GET['p'] < $library['total_pages']): ?>
+					<a href="index.php?library&p=<?php echo (isset($_GET['p'])) ? $_GET['p']+1 : 2 ?>" style="float:right">
+						<button type="button">Next</button>
+					</a>
+				<?php endif ?>
+				
 			<?php endif ?>
+			
+			<form action="index.php?library<?php echo (isset($_GET['p'])) ? '&p='.$_GET['p'] : '' ?>" method="post" accept-charset="utf-8" style="text-align:center">
+				<input type="submit" name="remove" value="Remove">
+			</form>
 	
 			<div class="preload">
 				<img src="assets/img/icons/red_x.png" alt=""/>

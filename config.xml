@@ -7,4 +7,8 @@
 		<password>vQ%B6cSzWrdCq9x</password>
 		<database>collectem_dev</database>
 	</database>
+	<library>
+		<per_page>21</per_page>
+		<pagination>2</pagination>
+	</library>
 </configuration>
