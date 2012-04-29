@@ -65,8 +65,7 @@
 				<label for="search_term" style="display:none">Title or UPC</label>
 				<input type="text" name="search" value="" id="search_term" placeholder="Title or UPC">
 			</p>
-			<!-- <div class="hidden-submit"><input type="submit" value="Search" tabindex="-1"></div> -->
-			<input type="submit" value="Search" tabindex="-1">
+			<input type="submit" value="Search">&nbsp;
 			<a href="index.php?library"><button type="button">View Library</button></a>
 		</form>
 		

@@ -25,19 +25,26 @@
 		
 		$page = (!get_get('page') || !is_numeric(get_get('page'))) ? 1 : get_get('page'); // Get the page
 		
-		$data = $collectem->search(get_get('type'), get_get('search'), $page)->getData();
-			
-		$movies = $data['movie_info']; // Get just the movie info
-		$sizes = $collectem->getImgSizes('poster');
-		
-		// Create pagination
-		if (isset($movies['total_pages']))
+		if (!in_array(get_get('type'), array('Title','UPC')))
 		{
-			$show_pagination = ($movies['total_pages'] > $cfg->pagination);
-		} else {
-			$show_pagination = FALSE;
+			$data['error'] = TRUE;
+			$data['message'] = 'Invalid search type. Please use the radio buttons.';
 		}
-		
+		else
+		{
+			$data = $collectem->search(get_get('type'), get_get('search'), $page)->getData();
+				
+			$movies = $data['movie_info']; // Get just the movie info
+			$sizes = $collectem->getImgSizes('poster');
+			
+			// Create pagination
+			if (isset($movies['total_pages']))
+			{
+				$show_pagination = ($movies['total_pages'] > $cfg->pagination);
+			} else {
+				$show_pagination = FALSE;
+			}
+		}
 		
 		// Display search results
 		include('views/search_results.php');
@@ -50,14 +57,13 @@
 		include('controllers/database.php');
 		
 		$collectem = new Collectem();
-		$tmdb = $collectem->getTMDB();
-		$img_url = $tmdb->getImageURL();
+		$img_url = $collectem->getImageURL();
 		
 		if (isset($_POST['selected']))
 		{
 			foreach ($_POST['selected'] as $movie)
 			{
-				$m = $tmdb->movieInfo($movie);
+				$m = $collectem->movieInfo($movie);
 							
 				$insert_data = array(
 					'id'=>$m['id'],
@@ -90,10 +96,9 @@
 	elseif (isset($_GET['summary']) && isset($_GET['id']))
 	{
 		$collectem = new Collectem();
-		$tmdb = $collectem->getTMDB();
-
-		$movie = $tmdb->movieInfo(get_get('id'));
-		$img_url = $tmdb->getImageURL();
+		
+		$movie = $collectem->movieInfo(get_get('id'));
+		$img_url = $collectem->getImageURL();
 		$sizes = $collectem->getImgSizes('poster');
 		
 		include('views/summary.php');
@@ -104,11 +109,10 @@
 	elseif (isset($_GET['library']) && isset($_GET['id']) && is_numeric($_GET['id']))
 	{
 		$collectem = new Collectem();
-		$tmdb = $collectem->getTMDB();
-
-		$movie = $tmdb->movieInfo(get_get('id'));
-		$movie['trailer'] = $tmdb->movieTrailer(get_get('id'));
-		$img_url = $tmdb->getImageURL();
+		
+		$movie = $collectem->movieInfo(get_get('id'));
+		$movie['trailer'] = $collectem->movieTrailer(get_get('id'));
+		$img_url = $collectem->getImageURL();
 		$sizes = $collectem->getImgSizes('poster');
 		
 		$show_homepage = (strlen($movie['homepage']) > 0);
@@ -162,9 +166,8 @@
 		}
 		
 		$collectem = new Collectem();
-		$tmdb = $collectem->getTMDB();
 		
-		$img_url = $tmdb->getImageURL();
+		$img_url = $collectem->getImageURL();
 		$sizes = $collectem->getImgSizes('poster');
 		
 		include('views/library.php');

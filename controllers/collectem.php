@@ -1,6 +1,9 @@
 <?php
+	if (!isset($_SESSION)) session_start();
+	require_once($_SESSION['url'].'/library/tmdb_v3.php');
+	include_once($_SESSION['url'].'/library/debug.php');
 
-	class Collectem
+	class Collectem extends TMDBv3
 	{
 		private $_path;
 		private $_data;
@@ -8,19 +11,23 @@
 		private $_tmdb;
 		private $_search_val;
 		private $_search_page;
-		const upc_key = 'bbef0d39300f88da751a1b799b25b14daa6e7fcb';
-		const tmdb_key = '9e6d6fd0c929169a985e709141dab305';
+		private $_upc_key;
+		private $_tmdb_key;
 		
 		function __construct()
-		{
-			if (!isset($_SESSION)) session_start();
+		{	
+		
+			// Get configuration
+			if (!file_exists($_SESSION['url'].'/config.xml'))
+			{
+				// handle error
+			} else {
+				$config = simplexml_load_file($_SESSION['url'].'/config.xml');
+				$this->_upc_key = $config->apis->upc;
+				$this->_tmdb_key = $config->apis->tmdb;
+			}
 			
-			$this->path = $_SESSION['url'];
-			
-			require_once("$this->path/library/tmdb_v3.php");
-			include_once("$this->path/library/debug.php");
-	
-			$this->_tmdb = new TMDBv3(self::tmdb_key);
+			parent::__construct($this->_tmdb_key);
 		}
 		
 		
@@ -30,8 +37,8 @@
 			$this->_search_page = $page;
 			
 			eval('$dummy = $this->search'.$type.'("'.$search_val.'");');
-			$this->_data['movie_info']['img_url'] = $this->_tmdb->getImageURL();
-			$this->_data['movie_info']['img_sizes'] = $this->_tmdb->getImageSizes();
+			$this->_data['movie_info']['img_url'] = parent::getImageURL();
+			$this->_data['movie_info']['img_sizes'] = parent::getImageSizes();
 			
 			return $this;
 		}
@@ -44,7 +51,7 @@
 			$client = new XML_RPC_Client('/xmlrpc', 'http://www.upcdatabase.com');
 			
 			$params = array( new XML_RPC_Value( array(
-				'rpc_key' => new XML_RPC_Value(self::upc_key, 'string'),
+				'rpc_key' => new XML_RPC_Value($this->_upc_key, 'string'),
 				'upc' => new XML_RPC_Value($this->_search_val, 'string'),
 				), 'struct'));
 			
@@ -94,7 +101,7 @@
 					);
 					$this->_search_val = preg_replace($arr_search, '', $this->_data['upc_info']['description']);
 					
-					$this->_data['movie_info'] = $this->_tmdb->searchMovie($this->_search_val, $this->_search_page);
+					$this->_data['movie_info'] = parent::searchMovie($this->_search_val, $this->_search_page);
 				}
 			}
 			
@@ -104,7 +111,7 @@
 		
 		private function searchTitle()
 		{
-			$this->_data['movie_info'] = $this->_tmdb->searchMovie($this->_search_val, $this->_search_page);
+			$this->_data['movie_info'] = parent::searchMovie($this->_search_val, $this->_search_page);
 			
 			return $this;
 		}
@@ -119,7 +126,7 @@
 		public function getPage($search_page)
 		{
 			$this->_search_page = $search_page;
-			$this->_data['movie_info'] = $this->_tmdb->searchMovie($this->_search_val, $this->_search_page);
+			$this->_data['movie_info'] = parent::searchMovie($this->_search_val, $this->_search_page);
 			
 			return $this;
 		}
@@ -133,7 +140,7 @@
 		
 		public function getImgSizes($type)
 		{
-			$sizes = $this->_tmdb->getImageSizes();
+			$sizes = parent::getImageSizes();
 			return $sizes[$type.'_sizes'];
 		}
 		

@@ -1,5 +1,9 @@
 <?xml version='1.0' standalone='yes'?>
 <configuration>
+	<apis>
+		<tmdb>9e6d6fd0c929169a985e709141dab305</tmdb>
+		<upc>bbef0d39300f88da751a1b799b25b14daa6e7fcb</upc>
+	</apis>
 	<database>
 		<server>localhost</server>
 		<port>3306</port>

@@ -147,6 +147,7 @@
 	<?php else: ?>
 		
 		<div id="msg"><?php echo $data['message'] ?></div>
+		<div style="clear:both"></div>
 		
 	<?php endif ?>
 	</div>
