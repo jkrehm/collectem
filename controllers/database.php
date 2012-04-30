@@ -115,18 +115,36 @@
 		}
 		
 		
-		public function getLibrary($start, $count)
-		{	
-			$stmt = $this->_db->stmt_init();
-			$stmt->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ?, ?');
-			$stmt->bind_param('ii', $start, $count);
-			$stmt->execute();
-			$return['library'] = $this->_fetch($stmt);
+		public function getLibrary($start, $count, $search=FALSE)
+		{
+			$stmt_srch = $this->_db->stmt_init();
+			$stmt_cnt = $this->_db->stmt_init();
 			
-			$res = $this->_db->query('SELECT COUNT(*) FROM collection');
-			$total = $res->fetch_row();
-			$return['total_results'] = $total[0];
-			$return['total_pages'] = ceil($total[0]/$count);
+			if (!$search)
+			{
+				$stmt_srch->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ?, ?');
+				$stmt_srch->bind_param('ii', $start, $count);
+				
+				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection');
+			}
+			else
+			{
+				$search = '%' . mysql_real_escape_string(str_replace(' ','%',$search)) . '%';
+				$stmt_srch->prepare('SELECT * FROM collection WHERE title LIKE ? ORDER BY search ASC LIMIT ?, ?');
+				$stmt_srch->bind_param('sii', $search, $start, $count);
+				
+				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
+				$stmt_cnt->bind_param('s', $search);
+			}
+			
+			$stmt_srch->execute();
+			$return['library'] = $this->_fetch($stmt_srch);
+			
+			$stmt_cnt->execute();
+			$stmt_cnt->bind_result($total);
+			$stmt_cnt->fetch();
+			$return['total_results'] = $total;
+			$return['total_pages'] = ceil($total/$count);
 			
 			return $return;
 		}

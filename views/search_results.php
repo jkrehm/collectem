@@ -46,9 +46,6 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-		li.selected div {
-			outline: 1px solid black;
-		}
 		.checked {
 			z-index: 2;
 			position: absolute;
@@ -58,16 +55,6 @@
 			width: 180px;
 			opacity:0.5;
 			filter:alpha(opacity=50);
-		}
-		#container {
-			background-color: #2B9BF1;
-			border: 2px solid #15539A;
-			-moz-box-shadow: 10px 10px 5px #888;
-			-webkit-box-shadow: 10px 10px 5px #888;
-			box-shadow: 10px 10px 5px #888;
-			-moz-border-radius: 15px;
-			border-radius: 15px;
-			padding: 20px;
 		}
 	</style>
 </head>
@@ -90,7 +77,7 @@
 			<?php if ($show_pagination): ?>
 				<div style="text-align:center">
 					<?php for ($i=1; $i<=$movies['total_pages']; $i++): ?>
-						<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+						<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&p=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
 					<?php endfor ?>
 				</div>
 			<?php else: ?>
@@ -117,13 +104,13 @@
 			<?php if ($movies['total_pages'] > 1): ?>
 			
 				<?php if ($collectem->getPageNumber() > 1): ?>
-					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() - 1 ?>" style="float:left">
+					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&p=<?php echo $collectem->getPageNumber() - 1 ?>" style="float:left">
 						<button type="button">Previous</button>
 					</a>
 				<?php endif ?>
 			
 				<?php if ($collectem->getPageNumber() < $movies['total_pages']): ?>
-					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&page=<?php echo $collectem->getPageNumber() + 1 ?>" style="float:right">
+					<a href="index.php?type=Title&search=<?php echo urlencode($collectem->getSearchVal()) ?>&p=<?php echo $collectem->getPageNumber() + 1 ?>" style="float:right">
 						<button type="button">Next</button>
 					</a>
 				<?php endif ?>
@@ -164,12 +151,10 @@
 		// Toggle the green checkmark on/off
 		$('.results div').toggle(
 			function() {
-				$(this).addClass('selected');
 				$(this).append('<img src="assets/img/icons/green_checkmark.png" class="checked"/>');
 				$('form').append('<input type="hidden" name="selected[]" value="'+this.id+'" id="selected_'+this.id+'">');
 			},
 			function() {
-				$(this).removeClass('selected');
 				$(this).find('.checked').remove();
 				$('#selected_'+this.id).remove();
 			}

@@ -2,7 +2,7 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
-	<title>Collect'em</title>
+	<title>Library (<?php echo $library['total_results'] ?>)</title>
 	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="assets/css/colorbox.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="assets/css/style.css" type="text/css" media="screen" charset="utf-8">
@@ -64,8 +64,14 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-		li.selected div {
-			outline: 1px solid black;
+		#library-search {
+			float: right;
+		}
+		#library-search input {
+			border: 1px solid #15539A;
+			-moz-border-radius: 15px;
+			border-radius: 15px;
+			padding: 5px;
 		}
 		#msg {
 			top: 25px;
@@ -89,17 +95,24 @@
 		
 		<?php else: ?>
 			
-			<div style="color:white; float:right">Movies: <?php echo $library['total_results'] ?></div>
+			<form method="get" action="index.php" id="library-search">
+				<input type="hidden" name="type" value="Lib" />
+				<input type="text" name="search" value="<?php echo (isset($_GET['search'])) ? $_GET['search'] : '' ?>" placeholder="Search library"/>
+			</form>
 			
 			<?php if ($show_pagination): ?>
 				<div style="text-align:center">
 					<?php for ($i=1; $i<=$total_pages; $i++): ?>
-						<a href="index.php?library&p=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+						<?php if (!isset($_GET['search'])): ?>
+							<a href="index.php?library&p=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+						<?php else: ?>
+							<a href="index.php?type=Lib&search=<?php echo $_GET['search'] ?>&p=<?php echo $i ?>"><?php echo $i . ' ' ?></a>
+						<?php endif ?>
 					<?php endfor ?>
 				</div>
-			<?php else: ?>
-				<div style="clear:both"></div>
 			<?php endif ?>
+			
+			<div style="clear:both"></div>
 		
 			<ul class="library">
 			<?php foreach ($library['library'] as $key => $movie): ?>
@@ -125,13 +138,24 @@
 			<?php if ($library['total_pages'] > 1): ?>
 			
 				<?php if (get_get('p') > 1): ?>
-					<a href="index.php?library&p=<?php echo $_GET['p']-1 ?>" style="float:left">
+					<?php if (!isset($_GET['search'])): ?>
+						<a href="index.php?library&p=<?php echo $_GET['p']-1 ?>" style="float:left">
+					<?php else: ?>
+						<a href="index.php?type=Lib&search=<?php echo $_GET['search'] ?>&p=<?php echo $_GET['p']-1 ?>" style="float:left">
+					<?php endif ?>
+						
 						<button type="button">Previous</button>
 					</a>
 				<?php endif ?>
 			
 				<?php if (!isset($_GET['p']) || $_GET['p'] < $library['total_pages']): ?>
-					<a href="index.php?library&p=<?php echo (isset($_GET['p'])) ? $_GET['p']+1 : 2 ?>" style="float:right">
+				
+					<?php if (!isset($_GET['search'])): ?>
+						<a href="index.php?library&p=<?php echo (isset($_GET['p'])) ? $_GET['p']+1 : 2 ?>" style="float:right">
+					<?php else: ?>
+						<a href="index.php?type=Lib&search=<?php echo $_GET['search'] ?>&p=<?php echo (isset($_GET['p'])) ? $_GET['p']+1 : 2 ?>" style="float:right">
+					<?php endif ?>
+					
 						<button type="button">Next</button>
 					</a>
 				<?php endif ?>

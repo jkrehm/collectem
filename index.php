@@ -23,15 +23,18 @@
 			$cfg = $config->library;
 		}
 		
-		$page = (!get_get('page') || !is_numeric(get_get('page'))) ? 1 : get_get('page'); // Get the page
-		
-		if (!in_array(get_get('type'), array('Title','UPC')))
+		if (!in_array(get_get('type'), array('Lib','Title','UPC')))
 		{
 			$data['error'] = TRUE;
 			$data['message'] = 'Invalid search type. Please use the radio buttons.';
+			
+			// Display search results
+			include('views/search_results.php');
 		}
-		else
+		elseif (in_array(get_get('type'), array('Title','UPC')))
 		{
+			$page = (!get_get('p') || !is_numeric(get_get('p'))) ? 1 : get_get('p'); // Get the page
+		
 			$data = $collectem->search(get_get('type'), get_get('search'), $page)->getData();
 				
 			$movies = $data['movie_info']; // Get just the movie info
@@ -44,10 +47,37 @@
 			} else {
 				$show_pagination = FALSE;
 			}
+			
+			// Display search results
+			include('views/search_results.php');
 		}
-		
-		// Display search results
-		include('views/search_results.php');
+		else
+		{
+			include_once('controllers/database.php');
+			
+			$database = new Database();
+			
+			// Show the library
+			$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->per_page - $cfg->per_page : 0;
+			
+			$library = $database->getLibrary($from, $cfg->per_page, get_get('search'));
+			
+			// Create pagination
+			if (isset($library['total_results']))
+			{
+				$total_pages = ceil($library['total_results'] / $cfg->per_page);
+				$show_pagination = ($total_pages > $cfg->pagination);
+			} else {
+				$show_pagination = FALSE;
+			}
+			
+			$collectem = new Collectem();
+			
+			$img_url = $collectem->getImageURL();
+			$sizes = $collectem->getImgSizes('poster');
+			
+			include('views/library.php');
+		}
 	}
 	
 	
