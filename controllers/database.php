@@ -137,6 +137,7 @@
 				$stmt_cnt->bind_param('s', $search);
 			}
 			
+			// Loop through and get all returned rows
 			$stmt_srch->execute();
 			$return['library'] = $this->_fetch($stmt_srch);
 			

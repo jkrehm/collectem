@@ -6,6 +6,7 @@
 	
 	include_once('library/input.php');
 	include_once('controllers/collectem.php');
+	include_once('controllers/config.php');
 	include_once('library/debug.php');
 	
 	
@@ -13,15 +14,7 @@
 	if (isset($_GET['search']))
 	{	
 		$collectem = new Collectem();
-		
-		// Get configuration
-		if (!file_exists('config.xml'))
-		{
-			// handle error
-		} else {
-			$config = simplexml_load_file('config.xml');
-			$cfg = $config->library;
-		}
+		$cfg = new Config();
 		
 		if (!in_array(get_get('type'), array('Lib','Title','UPC')))
 		{
@@ -43,7 +36,7 @@
 			// Create pagination
 			if (isset($movies['total_pages']))
 			{
-				$show_pagination = ($movies['total_pages'] > $cfg->pagination);
+				$show_pagination = ($movies['total_pages'] > $cfg->getLibrary()->pagination);
 			} else {
 				$show_pagination = FALSE;
 			}
@@ -58,15 +51,15 @@
 			$database = new Database();
 			
 			// Show the library
-			$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->per_page - $cfg->per_page : 0;
+			$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->getLibrary()->per_page - $cfg->getLibrary()->per_page : 0;
 			
-			$library = $database->getLibrary($from, $cfg->per_page, get_get('search'));
+			$library = $database->getLibrary($from, $cfg->getLibrary()->per_page, get_get('search'));
 			
 			// Create pagination
 			if (isset($library['total_results']))
 			{
-				$total_pages = ceil($library['total_results'] / $cfg->per_page);
-				$show_pagination = ($total_pages > $cfg->pagination);
+				$total_pages = ceil($library['total_results'] / $cfg->getLibrary()->per_page);
+				$show_pagination = ($total_pages > $cfg->getLibrary()->pagination);
 			} else {
 				$show_pagination = FALSE;
 			}
@@ -84,7 +77,14 @@
 	// User selected an item
 	elseif (isset($_POST['add']))
 	{
-		include('controllers/database.php');
+		$cfg = new Config();
+		
+		if ($cfg->dbType('M'))
+		{
+			include_once('controllers/database.php');
+		} else {
+			include_once('controllers/sqlite.php');
+		}
 		
 		$collectem = new Collectem();
 		$img_url = $collectem->getImageURL();
@@ -154,15 +154,13 @@
 	// Display library
 	elseif (isset($_GET['library']))
 	{
-		include_once('controllers/database.php');
+		$cfg = new Config();
 		
-		// Get configuration
-		if (!file_exists('config.xml'))
+		if ($cfg->dbType('M'))
 		{
-			// handle error
+			include_once('controllers/database.php');
 		} else {
-			$config = simplexml_load_file('config.xml');
-			$cfg = $config->library;
+			include_once('controllers/sqlite.php');
 		}
 		
 		$database = new Database();
@@ -182,15 +180,15 @@
 		}
 		
 		// Show the library
-		$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->per_page - $cfg->per_page : 0;
+		$from = (isset($_GET['p'])) ? $_GET['p'] * $cfg->getLibrary()->per_page - $cfg->getLibrary()->per_page : 0;
 		
-		$library = $database->getLibrary($from, $cfg->per_page);
+		$library = $database->getLibrary($from, $cfg->getLibrary()->per_page);
 		
 		// Create pagination
 		if (isset($library['total_results']))
 		{
-			$total_pages = ceil($library['total_results'] / $cfg->per_page);
-			$show_pagination = ($total_pages > $cfg->pagination);
+			$total_pages = ceil($library['total_results'] / $cfg->getLibrary()->per_page);
+			$show_pagination = ($total_pages > $cfg->getLibrary()->pagination);
 		} else {
 			$show_pagination = FALSE;
 		}

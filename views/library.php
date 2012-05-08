@@ -89,7 +89,7 @@
 		
 	<?php if (!isset($data['error'])): ?>
 			
-		<?php if (!isset($library['library']) || count($library['library']) == 0): ?>
+		<?php if (!isset($library['library']) || count($library['library']) == 0 || !$library['library']): ?>
 		
 			<div style="font-size:1.5em; color:white; text-align:center; clear:left">No movies found</div>
 		

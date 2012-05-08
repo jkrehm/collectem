@@ -5,6 +5,7 @@
 		<upc>bbef0d39300f88da751a1b799b25b14daa6e7fcb</upc>
 	</apis>
 	<database>
+		<type>S</type>
 		<server>localhost</server>
 		<port>3306</port>
 		<username>process</username>

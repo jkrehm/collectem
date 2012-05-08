@@ -9,11 +9,15 @@
 				include_once('ChromePhp.php');
 				chromephp::log($item);
 			} elseif ($view == 'P') {
-				echo '<pre>'.print_r($item).'</pre>';
+				echo '<pre>';
+				print_r($item);
+				echo '</pre>';
 			} else {
 				include_once('ChromePhp.php');
 				chromephp::log($item);
-				echo '<pre>'.print_r($item).'</pre>';
+				echo '<pre>';
+				print_r($item);
+				echo '</pre>';
 			}
 		}
 	}
