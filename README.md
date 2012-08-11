@@ -17,10 +17,14 @@ First, thank you for checking out Collect'em, a simple web-based movie library a
 	3. Run the assets/sql/MySQL.sql script against that database (it should create a table called COLLECTION).
 5. API(s)
 	1. Obtain an API from The Movie Database (http://help.themoviedb.org/kb/general/how-do-i-register-for-an-api-key).
+	Note: If you intend to use the application regularly, please obtain your own key so the maximum request/day is never hit. The key is free.
 6. Configuration
 	1. Browse to the application in a web brower (should display index.php).
 	2. Either go to the settings page (the gear in the top-right of the screen) or click on "Search" or "View Library" (because if no configuration file is found, you are redirected to the configuration screen).
 	3. Fill in all information, test the database connection, and save the settings.
 7. You are ready to use Collect'em.
+
+### License
+Released under the [GPLv3 license.](http://www.gnu.org/licenses/gpl.html)
 
 ### Release History

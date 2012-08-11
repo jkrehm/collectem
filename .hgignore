@@ -1,5 +1,6 @@
 syntax: glob
 .DS_Store
+config.json
+assets/db
+assets/css/backup
 syntax: regexp
-assets/css/backup/*
-assets/db/*
