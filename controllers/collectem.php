@@ -1,5 +1,6 @@
 <?php
 	if (!isset($_SESSION)) session_start();
+
 	require_once($_SESSION['url'].'/library/tmdb_v3.php');
 	include_once($_SESSION['url'].'/library/debug.php');
 
@@ -15,14 +16,14 @@
 		private $_tmdb_key;
 		
 		function __construct()
-		{	
-		
+		{
 			// Get configuration
-			if (!file_exists($_SESSION['url'].'/config.xml'))
+			if (!file_exists('assets/json/config.json'))
 			{
-				// handle error
-			} else {
-				$config = simplexml_load_file($_SESSION['url'].'/config.xml');
+				header('Location: index.php?config');
+			}
+			else {
+				$config = json_decode(file_get_contents('assets/json/config.json'));
 				$this->_upc_key = $config->apis->upc;
 				$this->_tmdb_key = $config->apis->tmdb;
 			}
@@ -156,7 +157,4 @@
 			return $this->_tmdb;
 		}
 	}
-
-
-
 ?>

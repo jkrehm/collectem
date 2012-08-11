@@ -1,0 +1,21 @@
+{
+	"apis":
+	{
+		"tmdb": "",
+		"upc": ""
+	},
+	"database":
+	{
+		"type": "M",
+		"server": "localhost",
+		"port": "3306",
+		"username": "",
+		"password": "",
+		"database": ""
+	},
+	"library":
+	{
+		"per_page": "20",
+		"pagination": "2"
+	}
+}

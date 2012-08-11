@@ -5,13 +5,14 @@
 		private $_cfg;
 		
 		public function __construct()
-		{
+		{			
 			// Get configuration
-			if (!file_exists('config.xml'))
+			if (!file_exists('assets/json/config.json'))
 			{
-				// handle error
-			} else {
-				$this->_cfg = simplexml_load_file('config.xml');
+				header('Location: index.php?config');
+			}
+			else {
+				$this->_cfg = json_decode(file_get_contents('assets/json/config.json'));
 			}
 		}
 		

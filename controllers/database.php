@@ -3,22 +3,41 @@
 	{
 		private $_db;
 		
-		public function __construct()
+		public function __construct($testing=FALSE, $config=NULL)
 		{
-			if (!file_exists('config.xml'))
+			// User must have SELECT, UPDATE, INSERT, and DELETE access. VIEW access may be required in the future.
+			if (!$testing)
 			{
-				// handle error
-			} else {
-				// User must have SELECT, UPDATE, INSERT, and DELETE access. VIEW access may be required in the future.
-				$config = simplexml_load_file('config.xml');
-				$cfg = $config->database;
+				if (!file_exists('assets/json/config.json'))
+				{
+					header('Location: index.php?config');
+				}
+				else {
+					$config = json_decode(file_get_contents('assets/json/config.json'));
+				}
 			}
+			else {
+				// Don't show errors if the connection is being tested
+				error_reporting(0);
+			}
+
+			$cfg = $config->database;
 			
-			$this->_db = new mysqli($cfg->server, $cfg->username, $cfg->password, $cfg->database);
+			$this->_db = new mysqli($cfg->server, $cfg->username, $cfg->password, $cfg->database, $cfg->port);
 			
 			if ($this->_db->connect_errno)
 			{
 				// handle error
+				if ($testing) {
+					echo 'false';
+				}
+				else {
+					$cfg->password = '***';
+					die('<br>Failed to connect using the following configuration: <pre>'.print_r($cfg, TRUE).'</pre>');
+				}
+			}
+			elseif ($testing) {
+				echo 'true';
 			}
 		}
 		

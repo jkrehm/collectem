@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<title>Movie Summary</title>
 	<style type="text/css" media="screen">
 		.poster {
@@ -14,7 +15,7 @@
 	<div>
 		<img class="poster" src="<?php echo $img_url . $sizes[2] . $movie['poster_path'] ?>" title="<?php echo $movie['title'] ?>" alt="<?php echo $movie['title'] ?>"/>
 		<p class="poster"><?php echo $movie['title'] ?></p>
-		<p class="poster"><?php echo $movie['release_date'] ?></p>
+		<p class="poster"><?php echo date('m/d/Y',strtotime($movie['release_date'])) ?></p>
 		<p><?php echo $movie['overview'] ?></p>
 	</div>
 </body>

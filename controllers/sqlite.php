@@ -6,13 +6,35 @@
 	{
 		private $_db;
 		
-		public function __construct()
+		public function __construct($testing=FALSE)
 		{
-			$this->_db = new SQLite3($_SESSION['url'].'/assets/db/collectem.db', SQLITE3_OPEN_READWRITE);
+			$this->_db = new SQLite3($_SESSION['url'].'/assets/db/collectem.db', SQLITE3_OPEN_READWRITE|SQLITE3_OPEN_CREATE);
 			
 			if (!$this->_db)
 			{
 				// Handle error
+			}
+			else {
+				// Check if the COLLECTION record is present. If not, create it.
+				$results = $this->_db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='COLLECTION'");
+				if (empty($results)) 
+				{
+					// Get the SQL statement from file
+					$sql = file_get_contents('assets/sql/SQLite.sql');
+					$results = $this->_db->exec($sql);
+
+					// Output the result of the test, if the connection is being tested
+					if ($testing) echo ($results) ? 'true' : 'false';
+
+					if (!$results)
+					{
+						// Handle error
+					}
+				}
+				elseif ($testing) {
+					// Database exists and the COLLECTION record is present, so test was successful
+					 echo 'true';
+				}
 			}
 		}
 		
@@ -87,12 +109,12 @@
 			{
 				$search = '%' . SQLite3::escapeString(str_replace(' ','%',$search)) . '%';
 				$stmt_srch = $this->_db->prepare('SELECT * FROM collection WHERE title LIKE ? ORDER BY search ASC LIMIT ? OFFSET ?');
-				$stmt_srch->bindValue(1, $search, SQLITE3_STRING);
+				$stmt_srch->bindValue(1, $search, SQLITE3_TEXT);
 				$stmt_srch->bindValue(2, $count, SQLITE3_INTEGER);
 				$stmt_srch->bindValue(3, $start, SQLITE3_INTEGER);
 				
 				$stmt_cnt = $this->_db->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
-				$stmt_cnt->bindValue(1, $search, SQLITE3_STRING);
+				$stmt_cnt->bindValue(1, $search, SQLITE3_TEXT);
 			}
 			
 			// Loop through and get all of the results (fetchArray returns FALSE if nothing's returned)
@@ -113,7 +135,7 @@
 		
 		public function getError()
 		{
-			return mysql_error();
+			return SQLite3::lastErrorMsg();
 		}
 	}
 ?>

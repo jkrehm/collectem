@@ -2,7 +2,7 @@
 	// Debug function to display passed variable
 	function debug($item, $view='')
 	{
-		if (isset($_GET['debug']))
+		if (isset($_GET['debug']) || isset($_POST['debug']))
 		{
 			if ($view == 'C')
 			{

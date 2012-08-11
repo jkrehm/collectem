@@ -1,2 +1,5 @@
 syntax: glob
 .DS_Store
+syntax: regexp
+assets/css/backup/*
+assets/db/*

@@ -2,6 +2,7 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<title>Library (<?php echo $library['total_results'] ?>)</title>
 	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="assets/css/colorbox.css" type="text/css" media="screen" charset="utf-8">
@@ -77,9 +78,6 @@
 			top: 25px;
 		}
 	</style>
-<script type="text/javascript" charset="utf-8">
-	
-</script>
 </head>
 <body id="index" onload="">
 	

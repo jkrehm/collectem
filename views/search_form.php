@@ -2,6 +2,7 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<title>Collect'em</title>
 	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="assets/css/style.css" type="text/css" media="screen" charset="utf-8">
@@ -48,22 +49,26 @@
 	</style>
 </head>
 <body id="index" onload="">
-	
+	<a href="index.php?config"><img id="config" src="assets/img/icons/gear.png"></a>
+
 	<div id="container">
-	
 	<?php if (!isset($data['error'])): ?>
 
 		<form action="index.php" method="get" accept-charset="utf-8">
 			<p>
+				<!--
 				<label for="search_type_title">Title</label>
 				<input type="radio" name="type" value="Title" id="search_type_title" checked="checked">
 			
 				<label for="search_type_upc">UPC</label>
 				<input type="radio" name="type" value="UPC" id="search_type_upc">
+				-->
+
+				<input type="hidden" name="type" value="Title" id="search_type_title">
 			</p>
 			<p>
-				<label for="search_term" style="display:none">Title or UPC</label>
-				<input type="text" name="search" value="" id="search_term" placeholder="Title or UPC">
+				<label for="search_term" style="display:none">Movie Title</label>
+				<input type="text" name="search" value="" id="search_term" placeholder="Movie Title">
 			</p>
 			<input type="submit" value="Search">&nbsp;
 			<a href="index.php?library"><button type="button">View Library</button></a>
@@ -79,6 +84,8 @@
 			
 	<?php endif ?>
 	</div>
+
+	<a href="http://jonathan.rehm.me" id="copyright">Created by Jonathan Rehm</a>
 </body>	
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" charset="utf-8"></script>	
 <script type="text/javascript" src="assets/js/collectem.js" charset="utf-8"></script>

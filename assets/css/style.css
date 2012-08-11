@@ -41,6 +41,16 @@ button, input[type="submit"] {
 	-webkit-box-shadow: 0 1px 2px #fff, 0 -1px 1px #666, inset 0 -1px 1px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.8);
 	text-shadow: 0 1px 2px #fff;
 }
+fieldset {
+	color: white;
+	border: 1px solid black;
+}
+label {
+	color: white;
+}
+legend {
+	padding: 0 5px;
+}
 
 
 /******* Classes *******/
@@ -56,6 +66,13 @@ button, input[type="submit"] {
 
 
 /******* ID's *******/
+#config {
+	position: absolute;
+	right: 15px;
+	top: 15px;
+	width: 30px;
+	height: 30px;
+}
 #container {
 	width: 80%;
 	background-color: #2B9BF1;
@@ -68,7 +85,16 @@ button, input[type="submit"] {
 	padding: 20px;
 	margin: 20px auto;
 }
+#copyright {
+	position: fixed;
+	bottom: 15px;
+	width: 100%;
+	font-family: FuturaLightRegular, Calibri, Verdana, Arial, sans-serif;
+	color: black;
+	text-align: center;
+}
 #msg {
+	color: black;
 	text-align: center;
 	position: absolute;
 	z-index: 500;

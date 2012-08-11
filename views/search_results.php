@@ -2,6 +2,7 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<title>Search: <?php echo get_get('search') ?></title>
 	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="assets/css/colorbox.css" type="text/css" media="screen" charset="utf-8">
@@ -123,7 +124,7 @@
 
 			<div class="preload">
 				<img src="assets/img/icons/green_checkmark.png" alt=""/>
-			<div>
+			</div>
 		
 		<?php endif ?>
 		
@@ -139,6 +140,9 @@
 	<?php endif ?>
 	</div>
 	
+	<a href="http://www.themoviedb.org/">
+		<img src="assets/img/tmdb-logo.png" style="position:fixed; left:15px; bottom:15px" alt="The Movie Database" title="Search provided by The Movie Database">
+	</a>
 </body>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" charset="utf-8"></script>
