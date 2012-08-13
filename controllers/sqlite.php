@@ -37,7 +37,7 @@
 			}
 			else {
 				// Check if the COLLECTION record is present. If not, create it.
-				$results = $this->_db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='COLLECTION'");
+				$results = $this->_db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='collection'");
 				if (empty($results)) 
 				{
 					// Get the SQL statement from file

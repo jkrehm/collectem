@@ -66,7 +66,7 @@
 					<a href="http://www.imdb.com/title/<?php echo $movie['imdb_id'] ?>/" style="font-size:0.5em">(imdb)</a>
 				</li>
 				<li style="font-size:0.8em; font-style:italic; padding-top:0"><?php echo $movie['tagline'] ?></li>
-				<li>Release Date: <?php echo $movie['release_date'] ?></li>
+				<li>Release Date: <?php echo date('m/d/Y', strtotime($movie['release_date'])) ?></li>
 				<li>Rating: <?php echo $movie['vote_average'] ?> (<?php echo $movie['vote_count'] ?> votes)</li>
 				<li>Runtime: <?php echo $movie['runtime'] ?> minutes</li>
 				<li>

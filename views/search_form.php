@@ -44,7 +44,7 @@
 			box-shadow: 10px 10px 5px #888;
 			-moz-border-radius: 15px;
 			border-radius: 15px;
-			margin: 10% auto;
+			margin: 50px auto;
 			padding: 10px;
 		}
 		form #search_term {
@@ -56,6 +56,9 @@
 			border-radius: 15px;
 			margin: 10px auto;
 			padding: 5px 10px;
+		}
+		h1 {
+			margin: 0;
 		}
 		input[type="submit"] {
 			width: 45%;
@@ -75,6 +78,8 @@
 
 	<div id="container">
 	<?php if (!isset($data['error'])): ?>
+
+		<h1>Collect'em</h1>
 
 		<form action="index.php" method="get" accept-charset="utf-8">
 			<p>
