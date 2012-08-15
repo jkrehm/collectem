@@ -20,7 +20,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Collect'em.  If not, see <http://www.gnu.org/licenses/>.
 */
-	if (!isset($_SESSION)) session_start();
+	if (!isset($_SESSION)) exit('No direct script access is permitted.');
 
 	require_once($_SESSION['url'].'/library/tmdb_v3.php');
 	include_once($_SESSION['url'].'/library/debug.php');

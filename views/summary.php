@@ -20,7 +20,10 @@
 * You should have received a copy of the GNU General Public License
 * along with Collect'em.  If not, see <http://www.gnu.org/licenses/>.
 */
- ?><!DOCTYPE html>
+
+	if (!isset($_SESSION)) exit('No direct script access is permitted.');
+ ?>
+ <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
