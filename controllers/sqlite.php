@@ -115,17 +115,10 @@
 		}
 		
 		
-		public function getLibrary($start, $count, $search=FALSE)
+		public function getLibrary($start, $count, $search=FALSE, $ids='')
 		{
-			if (!$search)
-			{
-				$stmt_srch = $this->_db->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ? OFFSET ?');
-				$stmt_srch->bindValue(1, $count, SQLITE3_INTEGER);
-				$stmt_srch->bindValue(2, $start, SQLITE3_INTEGER);
-				
-				$stmt_cnt = $this->_db->prepare('SELECT COUNT(*) FROM collection');
-			}
-			else
+			// Searching by movie title
+			if ($search)
 			{
 				$search = '%' . SQLite3::escapeString(str_replace(' ','%',$search)) . '%';
 				$stmt_srch = $this->_db->prepare('SELECT * FROM collection WHERE title LIKE ? ORDER BY search ASC LIMIT ? OFFSET ?');
@@ -136,12 +129,42 @@
 				$stmt_cnt = $this->_db->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
 				$stmt_cnt->bindValue(1, $search, SQLITE3_TEXT);
 			}
+
+			// Getting info for specific movie(s)
+			elseif (!empty($ids))
+			{
+				// Make the array of IDs into a string
+				if (is_array($ids))
+				{
+					$temp = '';
+					foreach ($ids as $id)
+						$temp .= "$id,";
+					$ids = substr($temp, 0, strlen($temp)-1);
+				}
+
+				$stmt_srch = $this->_db->prepare("SELECT * FROM collection WHERE id IN ($ids) ORDER BY search ASC LIMIT ? OFFSET ?");
+				$stmt_srch->bindValue(1, $count, SQLITE3_INTEGER);
+				$stmt_srch->bindValue(2, $start, SQLITE3_INTEGER);
+				
+				$stmt_cnt = $this->_db->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
+				$stmt_cnt->bindValue(1, $search, SQLITE3_TEXT);
+			}
+
+			// Get the whole library
+			else
+			{
+				$stmt_srch = $this->_db->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ? OFFSET ?');
+				$stmt_srch->bindValue(1, $count, SQLITE3_INTEGER);
+				$stmt_srch->bindValue(2, $start, SQLITE3_INTEGER);
+				
+				$stmt_cnt = $this->_db->prepare('SELECT COUNT(*) FROM collection');
+			}
 			
 			// Loop through and get all of the results (fetchArray returns FALSE if nothing's returned)
 			$results = $stmt_srch->execute();
 			while (($row = $results->fetchArray(SQLITE3_ASSOC)) != FALSE)
 			{
-				$return['library'][] = $row;
+				$return['library'][$row['id']] = $row;
 			}
 			
 			$total = $stmt_cnt->execute();

@@ -29,8 +29,8 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<title>Collect'em</title>
-	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="assets/css/style.css" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="assets/css/normalize.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="assets/css/style.css" type="text/css" media="screen">
 	<style type="text/css" media="screen">
 		button {
 			width: 45%;
@@ -77,7 +77,7 @@
 	</style>
 </head>
 <body id="index" onload="">
-	<a href="index.php?config"><img id="config" src="assets/img/icons/gear.png"></a>
+	<a href="index.php?config"><img id="config" src="assets/img/icons/gear.png" alt="Gear" title="Configuration"></a>
 
 	<div id="container">
 	<?php if (!isset($data['error'])): ?>
@@ -101,7 +101,7 @@
 				<input type="text" name="search" value="" id="search_term" placeholder="Movie Title">
 			</p>
 			<input type="submit" value="Search">&nbsp;
-			<a href="index.php?library"><button type="button">View Library</button></a>
+			<button type="button" onclick="document.location='index.php?library'">View Library</button>
 		</form>
 		
 		<?php if (isset($data['message'])): ?>
@@ -117,9 +117,9 @@
 
 	<a href="http://jonathan.rehm.me" id="copyright">Created by Jonathan Rehm</a>
 </body>	
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" charset="utf-8"></script>	
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="assets/js/collectem.js" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
 	$(document).ready(function() {
 		// Hide the message box
 		var t=setTimeout("hide_msg()",3500);

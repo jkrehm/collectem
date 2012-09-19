@@ -29,6 +29,51 @@
 	include_once('controllers/collectem.php');
 	include_once('controllers/config.php');
 	include_once('library/debug.php');
+
+
+
+	function getWatchList($database, $img_url, $sizes)
+	{
+		// Get watch list data (if it exists)
+		$watch_list = get_session('watch_list');
+
+		if ($watch_list != FALSE)
+		{
+			$watch_list = $database->getLibrary(0, 5, FALSE, $watch_list);
+
+			// If the selected movies aren't part of the library currently, then clear the watch list
+			if (!isset($watch_list['library']))
+			{
+				$watch_list = FALSE;
+				unset($_SESSION['watch_list']);
+			}
+			else {
+				// Pare down the fields and build the images
+				$temp = array();
+				foreach ($watch_list['library'] as $key => $movie)
+				{
+					// Conditionally set the poster to empty, if no path is found
+					if (empty($movie['poster_path']))
+					{
+						$poster_path = 'assets/img/empty_img.png';
+					}
+					else {
+						$poster_path = $img_url.$sizes[0].$movie['poster_path'];
+					}
+
+					$temp[$key] = array(
+						'id' => $movie['id'],
+						'title' => $movie['title'],
+						'poster_path' => $poster_path
+					);
+				}
+				$watch_list = $temp; // Overwrite what was there
+			}
+		}
+
+		return $watch_list;
+	}
+
 	
 	
 	if (isset($_GET['config']))
@@ -62,6 +107,7 @@
 
 		include('views/search_form.php');
 	}
+
 
 
 	// User searched for an item
@@ -136,11 +182,24 @@
 			
 			$img_url = $collectem->getImageURL();
 			$sizes = $collectem->getImgSizes('poster');
-			
+
+
+			// Set the movie poster paths
+			foreach ($library['library'] as $key => $movie)
+			{
+				$library['library'][$key]['poster_path'] = (!empty($movie['poster_path'])) ? $img_url . $sizes[2] . $movie['poster_path'] : 'assets/img/empty_img.png';
+			}
+			unset($movie);
+
+
+			// Get watch list data
+			$watch_list = getWatchList($database, $img_url, $sizes);
+
 			include('views/library.php');
 		}
 	}
 	
+
 	
 	// User selected an item
 	elseif (isset($_POST['add']))
@@ -189,6 +248,7 @@
 		include 'views/search_form.php';
 	}
 	
+
 	
 	// Display summary
 	elseif (isset($_GET['summary']) && isset($_GET['id']))
@@ -202,6 +262,7 @@
 		include('views/summary.php');
 	}
 	
+
 	
 	// Display details
 	elseif (isset($_GET['library']) && isset($_GET['id']) && is_numeric($_GET['id']))
@@ -218,6 +279,7 @@
 		include('views/detail.php');
 	}
 	
+
 	
 	// Display library
 	elseif (isset($_GET['library']))
@@ -260,14 +322,29 @@
 		} else {
 			$show_pagination = FALSE;
 		}
-		
+
+
+		// Get data from TMDB
 		$collectem = new Collectem();
 		
 		$img_url = $collectem->getImageURL();
 		$sizes = $collectem->getImgSizes('poster');
+
+		// Set the movie poster paths
+		foreach ($library['library'] as $key => $movie)
+		{
+			$library['library'][$key]['poster_path'] = (!empty($movie['poster_path'])) ? $img_url . $sizes[2] . $movie['poster_path'] : 'assets/img/empty_img.png';
+		}
+		unset($movie);
+
+
+		// Get watch list data
+		$watch_list = getWatchList($database, $img_url, $sizes);
+
 		
 		include('views/library.php');
 	}
+
 
 
 	// Test the database connection (called from configuration screen)
@@ -284,11 +361,81 @@
 		$config = json_decode(json_encode($_POST));
 		$database = new Database($testing=TRUE, $config);
 	}
-	
-	
+
+
+
+	// Add selected movie to watch options list
+	elseif (isset($_POST['add_watchlist']))
+	{
+		$id = get_post('id');
+		$data = array();
+
+		if (!is_numeric($id))
+		{
+			$data['status'] = 'Invalid movie ID';
+		}
+		elseif (isset($_SESSION['watch_list']) && count($_SESSION['watch_list']) > 4) {
+			$data['status'] = 'Maximum number of movies selected';
+		}
+		elseif (isset($_SESSION['watch_list']) && in_array($id, $_SESSION['watch_list'])) {
+			$data['status'] = 'Movie already in list';
+		}
+		else {
+			// Add the movie to the watch list
+			$_SESSION['watch_list'][$id] = $id;
+
+			// Get the movie info
+			$collectem = new Collectem();
+		
+			$movie = $collectem->movieInfo($id);
+			$img_url = $collectem->getImageURL();
+			$sizes = $collectem->getImgSizes('poster');
+
+			// Conditionally set the poster to empty, if no path is found
+			if (empty($movie['poster_path']))
+			{
+				$poster_path = 'assets/img/empty_img.png';
+			}
+			else {
+				$poster_path = $img_url.$sizes[0].$movie['poster_path'];
+			}
+
+			$data['status'] = 'Success';
+			$data['movie'] = array(
+				'id' => $movie['id'],
+				'title' => $movie['title'],
+				'poster_path' => $poster_path
+			);
+		}
+
+		echo json_encode($data);
+	}
+
+
+
+	// Remove selected movie to watch options list
+	elseif (isset($_POST['remove_watchlist']))
+	{
+		$id = get_post('id');
+
+		if (!is_numeric($id))
+		{
+			echo 'Fail';
+		}
+		else {
+			unset($_SESSION['watch_list'][$id]);
+			echo 'Success';
+		}
+	}
+
+
+
 	// Display search page
 	else
 	{
+		// Remove session data
+		unset($_SESSION['watch_list']);
+
 		include('views/search_form.php');
 	}
 	

@@ -82,19 +82,19 @@
 				
 				call_user_func_array(array($result, 'bind_result'), $variables);
 				
-				$i=0;
+				// $i=0;
 				while($result->fetch())
 				{
-					$array[$i] = array();
+					$array[$data['id']] = array();
 					foreach($data as $k=>$v)
-						$array[$i][$k] = $v;
-					$i++;
+						$array[$data['id']][$k] = $v;
+					// $i++;
 				}
 			}
 			elseif($result instanceof mysqli_result)
 			{
 				while($row = $result->fetch_assoc())
-					$array[] = $row;
+					$array[$row['id']] = $row;
 			}
 			
 			return $array;
@@ -157,19 +157,13 @@
 		}
 		
 		
-		public function getLibrary($start, $count, $search=FALSE)
+		public function getLibrary($start, $count, $search=FALSE, $ids='')
 		{
 			$stmt_srch = $this->_db->stmt_init();
 			$stmt_cnt = $this->_db->stmt_init();
 			
-			if (!$search)
-			{
-				$stmt_srch->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ?, ?');
-				$stmt_srch->bind_param('ii', $start, $count);
-				
-				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection');
-			}
-			else
+			// Searching by movie title
+			if ($search)
 			{
 				$search = '%' . mysql_real_escape_string(str_replace(' ','%',$search)) . '%';
 				$stmt_srch->prepare('SELECT * FROM collection WHERE title LIKE ? ORDER BY search ASC LIMIT ?, ?');
@@ -177,6 +171,34 @@
 				
 				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
 				$stmt_cnt->bind_param('s', $search);
+			}
+
+			// Getting info for specific movie(s)
+			elseif (!empty($ids))
+			{
+				// Make the array of IDs into a string
+				if (is_array($ids))
+				{
+					$temp = '';
+					foreach ($ids as $id)
+						$temp .= "$id,";
+					$ids = substr($temp, 0, strlen($temp)-1);
+				}
+
+				$stmt_srch->prepare("SELECT * FROM collection WHERE id IN ($ids) ORDER BY search ASC LIMIT ?, ?");
+				$stmt_srch->bind_param('ii', $start, $count);
+				
+				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection WHERE title LIKE ?');
+				$stmt_cnt->bind_param('s', $search);
+			}
+
+			// Get the whole library
+			else
+			{
+				$stmt_srch->prepare('SELECT * FROM collection ORDER BY search ASC LIMIT ?, ?');
+				$stmt_srch->bind_param('ii', $start, $count);
+				
+				$stmt_cnt->prepare('SELECT COUNT(*) FROM collection');
 			}
 			
 			// Loop through and get all returned rows
