@@ -31,3 +31,5 @@ First, thank you for checking out Collect'em, a simple web-based movie library a
 
 ### License
 Released under the [GPLv3 license.](http://www.gnu.org/licenses/gpl.html)
+
+Repository available on both [BitBucket](https://bitbucket.org/jkrehm/collectem) and [Github](https://github.com/jkrehm/collectem)
