@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Collect'em by jkrehm</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/jkrehm/collectem">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/jkrehm/collectem/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/jkrehm/collectem/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Collect'em</h1>
+          <p>Collect'em is a web based movie collection library. It lets you specify which movies you own, making it easy for you to show guests (when trying to decide what to watch) or figure out if you already own it (when looking in the Wal-Mart bargain bin).</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/jkrehm">jkrehm</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h3>History</h3>
+
+<p>First, thank you for checking out Collect'em, a simple web-based movie library application. I decided to create it when my wife and I had family come visit and we had a hard time deciding on a movie to watch because our movies are stored in a closet (they've been deemed aesthetically displeasing) and only one person can fit in there at a time. So I wanted something that would allow me to display our library on a tablet, phone or whatever device happened to be nearby. This application is the result of that need.</p>
+
+<h3>Tour</h3>
+
+<p>View a <a href="http://collectem.rehm.me/">screenshot tour</a> of the application.</p>
+
+<h3>Prerequisites</h3>
+
+<ol>
+<li>A web server (either on a dedicated server or running on a personal computer via Apache, IIS, etc.)</li>
+<li>Knowledge of granting the web server write permissions to a directory and its files (see instructions below).</li>
+<li>A movie library that you would like to browse from a web enabled device.</li>
+</ol><h3>Installation</h3>
+
+<p><strong>Note:</strong> Collect'em supports both MySQL and SQLite (for those who don't want to devote resources to a full-fledged database). Steps 3 and 4 deal with the database setup, so you only have to follow the steps for the one you are planning on using.</p>
+
+<ol>
+<li>Download the directory and place it where you want it in your web server's directory.</li>
+<li>Grant your web server write permissions to the assets/json directory and all files in it (for configuration)</li>
+<li>SQLite
+
+<ul>
+<li>Grant your web server write permissions to the assets/db directory and all files in it (it needs directory access for temporary file creation/writing).</li>
+</ul>
+</li>
+<li>MySQL
+
+<ul>
+<li>Download the SQL script.</li>
+<li>Create a database (or use an existing one) with a user who has SELECT, UPDATE, and DELETE access. I recommend granting the user access to Views, too, just in case that's used in a future version.</li>
+<li>Run the assets/sql/MySQL.sql script against that database (it should create a table called COLLECTION).</li>
+</ul>
+</li>
+<li>API(s)
+
+<ul>
+<li>Obtain an API from The Movie Database (<a href="http://help.themoviedb.org/kb/general/how-do-i-register-for-an-api-key">http://help.themoviedb.org/kb/general/how-do-i-register-for-an-api-key</a>).
+<strong>Note:</strong> If you intend to use the application regularly, please obtain your own key so the maximum request/day is never hit. The key is free.</li>
+</ul>
+</li>
+<li>Configuration
+
+<ul>
+<li>Browse to the application in a web browser (should display index.php).</li>
+<li>Either go to the settings page (the gear in the top-right of the screen) or click on "Search" or "View Library" (because if no configuration file is found, you are redirected to the configuration screen).</li>
+<li>Fill in all information, test the database connection, and save the settings.</li>
+</ul>
+</li>
+<li>You are ready to use Collect'em.</li>
+</ol><h3>License</h3>
+
+<p>Released under the <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license.</a></p>
+
+<p>Repository available on both <a href="https://bitbucket.org/jkrehm/collectem">BitBucket</a> and <a href="https://github.com/jkrehm/collectem">Github</a>.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-34040694-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
